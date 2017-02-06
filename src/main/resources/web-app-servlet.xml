@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+
+	<!-- spring mvc -->
+	<!-- web mvc configuration -->
+	<!-- view resolver 视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:viewClass="org.springframework.web.servlet.view.JstlView" 
+		p:prefix="/WEB-INF/jsp/"
+		p:suffix=".jsp" />
+	
+	<!-- 扫描web包，应用Spring的注解 -->
+<!-- 	<context:component-scan base-package="com.fyn.controller" /> -->
+		<context:component-scan base-package="*" />
+	
+	
+	<!--mvc 消息协议转换 -->
+	<mvc:annotation-driven conversion-service="conversionService" >
+      <mvc:message-converters register-defaults="true">
+          <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                   <list>
+                     <value>text/html;charset=UTF-8</value>
+                     <value>application/json;charset=UTF-8</value>
+                   </list>
+                </property>
+                <property name="features">
+                   <array>
+                      <value>WriteNullStringAsEmpty</value>
+                      <value>WriteNullListAsEmpty</value>
+                      <value>DisableCircularReferenceDetect</value>  
+                   </array>
+                </property>
+         </bean>
+       	 <bean id="utf8StringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+					</list>
+				</property>
+		</bean>
+     </mvc:message-converters>
+  </mvc:annotation-driven>
+    
+    <bean id="DisableCircularReferenceDetect" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">  
+               <property name="staticField" value="com.alibaba.fastjson.serializer.SerializerFeature.DisableCircularReferenceDetect"></property>  
+        </bean>  
+  
+	<bean id="conversionService"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean class="com.fyn.common.plugins.StringToDateConverter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="exceptionResolver" class="com.fyn.common.exception.MySimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+		    <props>
+		        <prop key="java.lang.Exception"></prop>
+		    </props>
+		</property>
+	</bean>
+	
+	<!-- CommonsMultipartResolver -->
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="maxUploadSize" value="2048000"></property>
+	</bean>
+
+    <bean class="com.fyn.common.interceptor.ExceptionHandler" />
+	<!-- MessageResolve -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" 
+		p:cookieName="clientLanguage"
+		p:cookieMaxAge="10000"
+		p:cookiePath="/"
+		p:defaultLocale="en"/>
+	<mvc:interceptors>
+		<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+		<bean id="loginInterceptor" class="com.fyn.adapter.interceptor.LoginInterceptor" >
+		    <property name="uncheckUrls">
+                <list> 
+                    <value>${domain.shengshen}/toLogin</value>
+                    <value>${domain.shengshen}/login</value>
+                    <value>${domain.shengshen}/logout</value>
+                    <value>${domain.shengshen}/404</value>
+                    <value>${domain.shengshen}/register</value>
+                    <value>${domain.shengshen}/toRegister</value>
+                    <value>${domain.shengshen}/newLogin</value>                
+                </list> 
+            </property>
+		</bean>   
+	</mvc:interceptors>
+	
+	
+	<mvc:resources mapping="/styles/**" location="/styles/" />
+	<mvc:resources mapping="/content/**" location="/content/" />
+	<mvc:resources mapping="/img/**" location="/img/" />
+	<mvc:resources mapping="/html/**" location="/html/"/>
+	<mvc:resources mapping="/css/**" location="/css/"/>
+	<mvc:resources mapping="/js/**" location="/js/"/>
+	<mvc:resources mapping="/files/**" location="/files/"/>
+</beans> 

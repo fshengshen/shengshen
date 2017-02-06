@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" metadata-complete="true">
+	
+	<!-- 声明应用范围(整个WEB项目)内的上下文初始化参数 -->
+<!-- 	<context-param> -->
+<!-- 		<param-name>etc_file</param-name> -->
+<!-- 		<param-value>/WEB-INF/etc/conf/app-config.xml</param-value> -->
+<!-- 	</context-param> -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:application-*.xml
+		</param-value>
+	</context-param>
+	
+	<!-- 配置字符集编码过滤器 -->
+<!-- 	<filter> -->
+<!-- 		<filter-name>encodingFilter</filter-name> -->
+<!-- 		<filter-class> -->
+<!-- 			com.aek.yifudai.web.adapter.filter.EncodingFilter -->
+<!-- 		</filter-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>encoding</param-name> -->
+<!-- 			<param-value>UTF-8</param-value> -->
+<!-- 		</init-param> -->
+<!-- 	</filter> -->
+	<!-- 用字符集编码过滤器过滤所有web请求以及所有spring控制器内的请求 -->
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>encodingFilter</filter-name> -->
+<!-- 		<url-pattern>/*</url-pattern> -->
+<!-- 	</filter-mapping> -->
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>encodingFilter</filter-name> -->
+<!-- 		<servlet-name>web-app</servlet-name> -->
+<!-- 	</filter-mapping> -->
+	
+	
+	<!-- 启动web容器时自动转载Spring配置 -->
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+    <!-- 配置Spring控制器 -->
+	<servlet>
+		<servlet-name>web-app</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+	        <param-name>contextConfigLocation</param-name>
+	        <param-value>classpath:web-app-servlet.xml</param-value>
+	    </init-param>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+    <!-- 用Spring控制器接收所有web请求 -->
+	<servlet-mapping>
+		<servlet-name>web-app</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 启动web容器时自动装载某些配置 -->
+<!-- 	<listener> -->
+<!-- 		<listener-class> -->
+<!-- 			com.aek.yifudai.web.adapter.listener.AppContextInitListener -->
+<!-- 		</listener-class> -->
+<!-- 	</listener> -->
+	
+<!-- 	<jsp-config> -->
+<!-- 	    <taglib> -->
+<!-- 	        <taglib-uri>/aek-functions</taglib-uri> -->
+<!-- 	        <taglib-location> -->
+<!-- 	            /WEB-INF/tlds/aek-functions.tld -->
+<!-- 	        </taglib-location> -->
+<!-- 	    </taglib> -->
+<!-- 	    <taglib> -->
+<!-- 	        <taglib-uri>/aek-tags</taglib-uri> -->
+<!-- 	        <taglib-location> -->
+<!-- 	            /WEB-INF/tlds/aek-tags.tld -->
+<!-- 	        </taglib-location> -->
+<!-- 	    </taglib> -->
+<!-- 	</jsp-config> -->
+	
+	<error-page>  
+	    <error-code>404</error-code>  
+	    <location>/404</location>
+	</error-page>
+	
+</web-app>

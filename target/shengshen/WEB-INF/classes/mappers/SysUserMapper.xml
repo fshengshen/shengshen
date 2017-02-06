@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<!-- 此命名空间必须和对应Mapper.java文件的命名空间一致 -->
+<mapper namespace="com.fyn.test.mapper.SysUserMapper">
+
+    <!-- 栏位列表 -->
+    <resultMap id="rm" type="com.fyn.sys.beans.SysUser">
+        <result property="id" jdbcType="INTEGER" column="id" />
+        <result property="username" jdbcType="VARCHAR" column="username" />
+        <result property="password" jdbcType="VARCHAR" column="password" />
+    </resultMap>
+
+    <!-- 获取 -->
+    <select id="getSysUser" resultMap="rm" parameterType="com.fyn.sys.beans.SysUser">
+        SELECT *
+          FROM sys_user
+         WHERE id = #{id}
+    </select>
+
+    <!-- 添加 -->
+    <insert id="addSysUser" parameterType="com.fyn.sys.beans.SysUser">
+        INSERT INTO sys_user(id,username,password)
+        VALUES (#{id},#{username},#{password})
+    </insert>
+
+    <!-- 修改 -->
+    <update id="editSysUser" parameterType="com.fyn.sys.beans.SysUser">
+        UPDATE sys_user
+           SET username=#{username},
+               password=#{password}
+         WHERE id = #{id}
+    </update>
+
+</mapper>
